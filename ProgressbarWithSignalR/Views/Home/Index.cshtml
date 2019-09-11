@@ -5,7 +5,7 @@
 <div class="container py-3">
     <div class="row">
         <div class="col-md-6">
-            @using (Ajax.BeginForm("Upload", "Home", new AjaxOptions { HttpMethod = "Post", OnSuccess = "ShowResult" }, new { enctype = "multipart/form-data" }))
+            @using (Ajax.BeginForm("Upload", "Home", null, new AjaxOptions { HttpMethod = "Post", OnSuccess = "ShowResult" }, new { enctype = "multipart/form-data", id = "uploadform" }))
             {
                 @Html.AntiForgeryToken()
                 <div class="custom-file">
@@ -36,25 +36,25 @@
             var fileName = e.target.files[0].name;
             e.target.nextElementSibling.textContent = fileName;
         })
-
+        var progressHub = $.connection.progressHub;
         $(function () {
-            var progressHub = $.connection.progressHub;
 
             progressHub.client.addprogress = function (progress) {
-                if (progress != 100) {
-                    $("#bar").css("width", progress + "%");
-                    $("#bar").val(progress + "%");
-                } else {
+
+                $("#bar").css("width", progress + "%");
+                $("#bar").text(progress + "%");
+
+                if (progress >= 100) {
                     $.connection.hub.stop();
                 }
             }
-
-            $.connection.hub.start().done(function () {
-                $("#uploadform").submit(function () {
-                    progressHub.server.currentProgress();
-                })
-            })
         })
+
+        $("#uploadform").submit(function () {
+            $.connection.hub.start().done(function () {
+                progressHub.server.currentProgress();
+            })
+        });
 
         function ShowResult(response) {
             alert(response.responseText);

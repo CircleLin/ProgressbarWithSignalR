@@ -19,18 +19,25 @@ namespace ProgressbarWithSignalR.SignalR
         /// <returns></returns>
         public override Task OnDisconnected(bool stopCalled)
         {
+            HttpContextBase httpContext = Context.Request.GetHttpContext();
+            if (httpContext.Cache.Get("rowCount") != null)
+                httpContext.Cache.Remove("rowCount");
+            if (httpContext.Cache.Get("insertedRowNum") != null)
+                httpContext.Cache.Remove("insertedRowNum");
+
             //Dispose Timer
-            if (stopCalled)
+            if (timer != null)
             {
                 timer.Dispose();
             }
+
             return base.OnDisconnected(stopCalled);
         }
 
         public void CurrentProgress()
         {
             //每秒取得目前進度
-            timer = new Timer(GetProcess, null, 0, 10);
+            timer = new Timer(GetProcess, null, 10, 500);
         }
 
         //取得目前進度

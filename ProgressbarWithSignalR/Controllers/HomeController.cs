@@ -25,7 +25,6 @@ namespace ProgressbarWithSignalR.Controllers
         public ActionResult Upload(HttpPostedFileBase file)
         {
             string errMsg = null;
-
             try
             {
                 if (file != null && file.ContentLength > 0)
@@ -54,20 +53,27 @@ namespace ProgressbarWithSignalR.Controllers
                         //Mapping到Hospital class
                         Hospital hospital = DataMapper(row);
 
-                        //模擬寫入到資料庫的情況，每筆randon 0~10毫秒
+                        //模擬寫入到資料庫的情況，每筆random 0~300毫秒
                         Random random = new Random();
-                        Thread.Sleep(random.Next(10));
+                        Thread.Sleep(random.Next(300));
 
                         //將目前處理到的筆數寫入Cache暫存，顯示進度用
                         HttpContext.Cache.Insert("insertedRowNum", j, null, DateTime.MaxValue, TimeSpan.FromMinutes(3));
                     }
+
+                    System.IO.File.Delete(uploadPath);
                 }
-                return Json(new { success = true, responseText = "Upload Successfully" }, JsonRequestBehavior.AllowGet);
+                else
+                {
+                    return Json(new { responseText = "請選擇檔案" }, JsonRequestBehavior.AllowGet);
+                }
+
+                return Json(new { responseText = "Upload Successfully" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 errMsg = ex.Message;
-                return Json(new { success = false, responseText = "Upload failed" }, JsonRequestBehavior.AllowGet);
+                return Json(new { responseText = "Upload failed " + errMsg }, JsonRequestBehavior.AllowGet);
             }
         }
 
