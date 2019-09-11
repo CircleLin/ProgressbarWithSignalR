@@ -62,13 +62,13 @@ namespace ProgressbarWithSignalR.Controllers
                         HttpContext.Cache.Insert("insertedRowNum", j, null, DateTime.MaxValue, TimeSpan.FromMinutes(3));
                     }
                 }
+                return Json(new { success = true, responseText = "Upload Successfully" }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {
                 errMsg = ex.Message;
+                return Json(new { success = false, responseText = "Upload failed" }, JsonRequestBehavior.AllowGet);
             }
-
-            return View();
         }
 
         private Hospital DataMapper(IRow row)
