@@ -14,7 +14,11 @@ User匯入Excel資料並存到資料庫，並且將進度顯示在畫面上
 4.  每秒讀取Cache中的目前筆數與總筆數，相除算出百分比進度，SignalR將進度推播至前端
 5.  前端接收後以Bootstrap的progress bar顯示
 
+#### 實作畫面
+![image](https://github.com/CircleLin/ProgressbarWithSignalR/blob/master/progress.PNG)
+
+
+* * *
 請使用 [台北市政府公開資料 臺北市預防接種合約院所] Excel匯入
 
   [台北市政府公開資料 臺北市預防接種合約院所]: https://data.taipei/api/getDatasetInfo/downloadResource?id=ec201f0a-2efa-4426-9439-a8daea7b33c7&rid=3063803c-8794-4d19-ab1c-3e602dd77506        "台北市政府公開資料 臺北市預防接種合約院所"
-
